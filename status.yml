@@ -1,0 +1,19 @@
+- name: Verificar la disponibilidad de las máquinas Linux
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Intentar hacer ping a los hosts
+      block:
+        - name: Ping a los hosts
+          ping:
+          register: ping_result
+          ignore_errors: yes
+
+        - name: Marcar host como activo
+          debug:
+            msg: "El host {{ inventory_hostname }} está ACTIVO."
+      rescue:
+        - name: Marcar host como apagado
+          debug:
+            msg: "El host {{ inventory_hostname }} está APAGADO o INACCESIBLE."
